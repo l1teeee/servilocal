@@ -24,6 +24,21 @@ vi.mock('@/lib/db', () => ({
 
 import { createJobPost, createJobApplication, selectJobApplication } from '@/actions/jobs'
 
+type MockTransactionClient = {
+  jobPost: {
+    findUnique: ReturnType<typeof vi.fn>
+    update?: ReturnType<typeof vi.fn>
+  }
+  jobApplication: {
+    findUnique: ReturnType<typeof vi.fn>
+    create?: ReturnType<typeof vi.fn>
+    updateMany?: ReturnType<typeof vi.fn>
+    update?: ReturnType<typeof vi.fn>
+  }
+}
+
+type TransactionCallback = (tx: MockTransactionClient) => Promise<unknown>
+
 beforeEach(() => {
   mockAuth.mockClear()
   mockJobPostFindUnique.mockClear()
@@ -128,7 +143,7 @@ describe('createJobApplication()', () => {
 
   it('returns post_not_found when job post does not exist', async () => {
     mockAuth.mockResolvedValueOnce(providerSession)
-    mockTransaction.mockImplementationOnce(async (fn: (tx: any) => Promise<any>) =>
+    mockTransaction.mockImplementationOnce(async (fn: TransactionCallback) =>
       fn({ jobPost: { findUnique: vi.fn().mockResolvedValueOnce(null) }, jobApplication: { findUnique: vi.fn(), create: vi.fn() } })
     )
     const result = await createJobApplication(validApplicationData)
@@ -137,7 +152,7 @@ describe('createJobApplication()', () => {
 
   it('returns post_not_open when job post is not OPEN', async () => {
     mockAuth.mockResolvedValueOnce(providerSession)
-    mockTransaction.mockImplementationOnce(async (fn: (tx: any) => Promise<any>) =>
+    mockTransaction.mockImplementationOnce(async (fn: TransactionCallback) =>
       fn({ jobPost: { findUnique: vi.fn().mockResolvedValueOnce({ id: validApplicationData.jobPostId, status: 'ASSIGNED' }) }, jobApplication: { findUnique: vi.fn(), create: vi.fn() } })
     )
     const result = await createJobApplication(validApplicationData)
@@ -147,7 +162,7 @@ describe('createJobApplication()', () => {
   it('returns already_applied when provider has an existing application', async () => {
     mockAuth.mockResolvedValueOnce(providerSession)
     const txCreate = vi.fn()
-    mockTransaction.mockImplementationOnce(async (fn: (tx: any) => Promise<any>) =>
+    mockTransaction.mockImplementationOnce(async (fn: TransactionCallback) =>
       fn({
         jobPost: { findUnique: vi.fn().mockResolvedValueOnce({ id: validApplicationData.jobPostId, status: 'OPEN' }) },
         jobApplication: { findUnique: vi.fn().mockResolvedValueOnce({ id: 'existing-app' }), create: txCreate },
@@ -162,7 +177,7 @@ describe('createJobApplication()', () => {
     mockAuth.mockResolvedValueOnce(providerSession)
     const created = { id: 'app-1', ...validApplicationData, providerId: 'provider-1', status: 'PENDING' }
     const txCreate = vi.fn().mockResolvedValueOnce(created)
-    mockTransaction.mockImplementationOnce(async (fn: (tx: any) => Promise<any>) =>
+    mockTransaction.mockImplementationOnce(async (fn: TransactionCallback) =>
       fn({
         jobPost: { findUnique: vi.fn().mockResolvedValueOnce({ id: validApplicationData.jobPostId, status: 'OPEN' }) },
         jobApplication: { findUnique: vi.fn().mockResolvedValueOnce(null), create: txCreate },
@@ -246,7 +261,7 @@ describe('selectJobApplication()', () => {
     const txUpdate = vi.fn().mockResolvedValue({ id: validSelectData.applicationId, status: 'ACCEPTED' })
     const txPostUpdate = vi.fn().mockResolvedValue(updatedPost)
 
-    mockTransaction.mockImplementationOnce(async (fn: (tx: any) => Promise<any>) =>
+    mockTransaction.mockImplementationOnce(async (fn: TransactionCallback) =>
       fn({
         jobPost: { findUnique: txPostFindUnique, update: txPostUpdate },
         jobApplication: { findUnique: txAppFindUnique, updateMany: txUpdateMany, update: txUpdate },

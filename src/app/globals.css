@@ -10,19 +10,37 @@
   --color-on-secondary: #ffffff;
   --color-secondary-container: #dbeafe;
   --color-on-secondary-container: #1e40af;
-  --color-background: #eff6ff;
+  --color-background: #ffffff;
   --color-on-background: #172554;
-  --color-surface: #eff6ff;
+  --color-surface: #ffffff;
   --color-on-surface: #172554;
   --color-surface-variant: #dbeafe;
   --color-on-surface-variant: #1e3a8a;
   --color-surface-container: #dbeafe;
-  --color-surface-container-low: #eff6ff;
+  --color-surface-container-low: #f0f4ff;
   --color-surface-container-lowest: #ffffff;
   --color-outline: #93c5fd;
   --color-outline-variant: #bfdbfe;
   --color-secondary-fixed: #dbeafe;
   --color-on-secondary-fixed: #1e40af;
+
+  /* Semantic aliases for cnippet/shadcn components */
+  --color-foreground: #172554;
+  --color-border: var(--color-outline-variant);
+  --color-input: var(--color-outline-variant);
+  --color-ring: var(--color-primary);
+  --color-primary-foreground: var(--color-on-primary);
+  --color-secondary-foreground: var(--color-on-secondary);
+  --color-destructive: #dc2626;
+  --color-destructive-foreground: #fef2f2;
+  --color-muted: var(--color-surface-container);
+  --color-muted-foreground: var(--color-on-surface-variant);
+  --color-accent: var(--color-surface-container);
+  --color-accent-foreground: var(--color-on-surface);
+  --color-card: var(--color-surface-container-lowest);
+  --color-card-foreground: var(--color-on-surface);
+  --color-popover: var(--color-surface-container-lowest);
+  --color-popover-foreground: var(--color-on-surface);
 
   /* Fonts */
   --font-sans: var(--font-jakarta), "Plus Jakarta Sans", sans-serif;
@@ -115,24 +133,30 @@
   transform: scale(0.97);
 }
 
-/* ---- Hero entrance: stagger with @starting-style ---- */
+/* ---- Hero entrance: stagger with @starting-style (Emil Kowalski) ---- */
+/* scale(0.97) + blur(4px) → elements "focus in" rather than just fade up  */
 
 .hero-item {
   opacity: 1;
-  transform: translateY(0);
-  transition: opacity 500ms var(--ease-out), transform 500ms var(--ease-out);
+  transform: none;
+  filter: none;
+  transition:
+    opacity    420ms var(--ease-out),
+    transform  420ms var(--ease-out),
+    filter     420ms var(--ease-out);
 }
 
 .hero-item-1 { transition-delay: 0ms; }
-.hero-item-2 { transition-delay: 80ms; }
-.hero-item-3 { transition-delay: 160ms; }
-.hero-item-4 { transition-delay: 240ms; }
-.hero-item-5 { transition-delay: 320ms; }
+.hero-item-2 { transition-delay: 60ms; }
+.hero-item-3 { transition-delay: 120ms; }
+.hero-item-4 { transition-delay: 180ms; }
+.hero-item-5 { transition-delay: 240ms; }
 
 @starting-style {
   .hero-item {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(8px) scale(0.97);
+    filter: blur(4px);
   }
 }
 
@@ -197,6 +221,52 @@
 
 /* ---- Reduced motion ---- */
 
+/* ---- Hero button hover — pointer devices only (Emil: never fake hover on touch) ---- */
+
+@media (hover: hover) and (pointer: fine) {
+  .hero-cta-ghost:hover {
+    transform: scale(1.02);
+  }
+  .hero-cta-pill:hover {
+    transform: scale(1.02);
+  }
+}
+
+.hero-cta-ghost {
+  transition:
+    background-color 180ms var(--ease-out),
+    border-color     180ms var(--ease-out),
+    color            180ms var(--ease-out),
+    transform        160ms var(--ease-out);
+}
+
+.hero-cta-pill {
+  transition: transform 160ms var(--ease-out);
+}
+
+/* ---- Hero scroll focus: fades into the categories section ---- */
+
+.hero-scroll-focus {
+  --hero-focus-blur: 0px;
+  --hero-focus-opacity: 1;
+  --hero-focus-veil: 0;
+  isolation: isolate;
+  background: white;
+}
+
+.hero-scroll-focus > :not(.hero-scroll-focus__veil) {
+  filter: blur(var(--hero-focus-blur));
+  opacity: var(--hero-focus-opacity);
+  will-change: filter, opacity;
+}
+
+.hero-scroll-focus__veil {
+  opacity: var(--hero-focus-veil);
+  will-change: opacity;
+}
+
+/* ---- Reduced motion ---- */
+
 @media (prefers-reduced-motion: reduce) {
   .hero-item,
   .card-enter,
@@ -207,5 +277,15 @@
     transition: none;
     opacity: 1;
     transform: none;
+    filter: none;
+  }
+
+  .hero-scroll-focus > :not(.hero-scroll-focus__veil) {
+    opacity: 1;
+    filter: none;
+  }
+
+  .hero-scroll-focus__veil {
+    opacity: 0;
   }
 }

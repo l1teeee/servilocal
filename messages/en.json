@@ -6,21 +6,40 @@
     "login": "Login"
   },
   "Footer": {
-    "tagline": "© 2024 ServiLocal. Built for the community.",
+    "tagline": "© 2026 ServiLocal. Built for the community.",
     "terms": "Terms of Service",
     "privacy": "Privacy Policy",
     "help": "Help Center",
-    "safety": "Safety Tips"
+    "safety": "Safety Tips",
+    "about": "About",
+    "jobs": "Open jobs",
+    "postJob": "Post a job",
+    "login": "Login"
   },
   "BottomNav": {
     "home": "Home",
     "jobs": "Jobs",
     "messages": "Messages",
-    "profile": "Profile"
+    "profile": "Profile",
+    "postJob": "Post",
+    "about": "About"
   },
   "HomePage": {
     "heroTitle": "Find trusted local workers",
     "heroSubtitle": "Connect with skilled artisans and tradespeople in your community. Secure, simple, and locally driven.",
+    "heroKicker": "Local work, protected payment",
+    "heroProof": "Post a request, compare proposals, and pay when the job is ready.",
+    "searchLabel": "Search service",
+    "searchHint": "Ex. plumber, cleaning, math lessons",
+    "heroVisualAlt": "Local workers reviewing a service request at a home",
+    "heroStatCategories": "active categories",
+    "heroStatPayment": "protected payment",
+    "heroStatCoverage": "El Salvador",
+    "heroRequestLabel": "Featured request",
+    "heroRequestTitle": "Electrical repair in Santa Tecla",
+    "heroRequestMeta": "2 proposals received",
+    "heroRequestBudget": "Budget",
+    "heroRequestStatus": "Payment ready to hold",
     "searchService": "What service?",
     "searchLocation": "Where?",
     "searchButton": "Search",
@@ -30,6 +49,12 @@
     "seeAll": "See all",
     "activeJobsTitle": "Active Jobs in your area",
     "activeJobsSubtitle": "Apply directly to these open requests.",
+    "activeJobsEyebrow": "Marketplace in motion",
+    "featuredJob": "Featured job",
+    "deadlineLabel": "Deadline",
+    "clientLabel": "Client",
+    "protectedPayment": "Protected payment",
+    "proposalCount": "{count, plural, =0 {No proposals} one {# proposal} other {# proposals}}",
     "sortNewest": "Newest",
     "sortBudget": "Highest Budget",
     "viewAllJobs": "View All Jobs",
@@ -40,6 +65,8 @@
     "trustPayment": "Secure payments via Tkiero",
     "trustLocal": "El Salvador only",
     "howItWorksTitle": "How it works",
+    "howItWorksEyebrow": "No confusion",
+    "howItWorksIntro": "ServiLocal keeps the process clear so clients and workers know what to expect at every step.",
     "howItWorksStep1Title": "Post your job",
     "howItWorksStep1Desc": "Describe what you need in seconds. It's free and simple.",
     "howItWorksStep2Title": "Choose your pro",
@@ -63,6 +90,15 @@
       "CLEANING": "Housekeeper",
       "DESIGN": "Designer",
       "DIGITAL": "Digital"
+    },
+    "categoryCount": "{count, plural, =0 {No active jobs} one {# active job} other {# active jobs}}",
+    "categoryHint": {
+      "PLUMBING": "Leaks, faucets, and installs",
+      "TEACHING": "Lessons and school support",
+      "DELIVERY": "Errands and local deliveries",
+      "CLEANING": "Homes, offices, and one-time cleaning",
+      "DESIGN": "Brand, content, and visual work",
+      "DIGITAL": "Web support and digital tasks"
     },
     "timeAgo": {
       "minutesAgo": "{count} min ago",

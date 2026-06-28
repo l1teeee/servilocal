@@ -134,7 +134,7 @@ export default async function JobsPage({
       {(searchQuery || validCategory) && (
         <p className="text-label-sm text-on-surface-variant mb-4">
           {jobs.length} resultado{jobs.length !== 1 ? 's' : ''}
-          {searchQuery && <> para <strong className="text-on-surface">"{searchQuery}"</strong></>}
+          {searchQuery && <> para <strong className="text-on-surface">&quot;{searchQuery}&quot;</strong></>}
           {validCategory && <> en <strong className="text-on-surface">{CATEGORY_LABELS[validCategory]}</strong></>}
           {' · '}
           <Link href="/jobs" className="text-primary hover:underline">

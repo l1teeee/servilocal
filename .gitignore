@@ -46,4 +46,11 @@ next-env.d.ts
 
 /src/generated/prisma
 .idea*
-.claude/worktrees
+
+# AI tools (Claude Code, Codex, etc.)
+.claude/settings.json
+.claude/settings.local.json
+.claude/worktrees/
+.claude/todos/
+.codex/
+.codex-cache/

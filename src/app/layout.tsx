@@ -17,7 +17,7 @@ const jakarta = Plus_Jakarta_Sans({
 })
 
 export const metadata: Metadata = {
-  title: 'ServiLocal — Encuentra trabajadores locales de confianza',
+  title: 'ServiLocal | Encuentra trabajadores locales de confianza',
   description:
     'Conecta con artesanos y trabajadores calificados en tu comunidad. Seguro, simple y local.',
 }

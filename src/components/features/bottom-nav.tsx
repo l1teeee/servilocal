@@ -1,24 +1,29 @@
+'use client'
+
 import Link from 'next/link'
-import { getTranslations } from 'next-intl/server'
+import { usePathname } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 
 const NAV_ITEMS = [
   { href: '/', icon: 'home', key: 'home', fill: true },
-  { href: '/services', icon: 'work', key: 'jobs', fill: false },
-  { href: '/messages', icon: 'chat_bubble', key: 'messages', fill: false },
-  { href: '/profile', icon: 'person', key: 'profile', fill: false },
+  { href: '/jobs', icon: 'work', key: 'jobs', fill: false },
+  { href: '/dashboard/jobs/new', icon: 'add_circle', key: 'postJob', fill: false },
+  { href: '/about', icon: 'info', key: 'about', fill: false },
 ] as const
 
-interface BottomNavProps {
-  activePath?: string
+function isActivePath(pathname: string, href: string) {
+  if (href === '/') return pathname === '/'
+  return pathname === href || pathname.startsWith(`${href}/`)
 }
 
-export async function BottomNav({ activePath = '/' }: BottomNavProps) {
-  const t = await getTranslations('BottomNav')
+export function BottomNav() {
+  const t = useTranslations('BottomNav')
+  const pathname = usePathname()
 
   return (
-    <nav className="bg-surface-container shadow-sm fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-gutter pb-4 pt-2 md:hidden rounded-t-xl">
+    <nav className="fixed bottom-0 left-0 z-50 flex w-full items-center justify-around rounded-t-2xl border-t border-outline-variant bg-surface-container-lowest px-gutter pb-4 pt-2 shadow-[0_-12px_30px_-22px_rgb(29_78_216_/_0.45)] md:hidden">
       {NAV_ITEMS.map(({ href, icon, key, fill }) => {
-        const isActive = activePath === href
+        const isActive = isActivePath(pathname, href)
         return (
           <Link
             key={href}

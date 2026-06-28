@@ -27,7 +27,10 @@ function getDb(): PrismaClient {
 export const db: PrismaClient = new Proxy({} as PrismaClient, {
   get(_, prop: string | symbol) {
     const client = getDb()
-    const val = Reflect.get(client, prop, client)
-    return typeof val === 'function' ? (val as Function).bind(client) : val
+    const val = Reflect.get(client, prop, client) as unknown
+    if (typeof val === 'function') {
+      return (...args: unknown[]) => (val as (...args: unknown[]) => unknown).apply(client, args)
+    }
+    return val
   },
 })

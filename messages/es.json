@@ -6,21 +6,40 @@
     "login": "Entrar"
   },
   "Footer": {
-    "tagline": "© 2024 ServiLocal. Hecho para la comunidad.",
+    "tagline": "© 2026 ServiLocal. Hecho para la comunidad.",
     "terms": "Términos de servicio",
     "privacy": "Política de privacidad",
     "help": "Centro de ayuda",
-    "safety": "Consejos de seguridad"
+    "safety": "Consejos de seguridad",
+    "about": "Acerca de",
+    "jobs": "Trabajos abiertos",
+    "postJob": "Publicar trabajo",
+    "login": "Entrar"
   },
   "BottomNav": {
     "home": "Inicio",
     "jobs": "Trabajos",
     "messages": "Mensajes",
-    "profile": "Perfil"
+    "profile": "Perfil",
+    "postJob": "Publicar",
+    "about": "Acerca de"
   },
   "HomePage": {
     "heroTitle": "Encuentra trabajadores locales de confianza",
     "heroSubtitle": "Conecta con artesanos y trabajadores calificados en tu comunidad. Seguro, simple y local.",
+    "heroKicker": "Trabajo local, pago protegido",
+    "heroProof": "Publica una solicitud, compara propuestas y paga cuando el trabajo esté listo.",
+    "searchLabel": "Buscar servicio",
+    "searchHint": "Ej. plomero, limpieza, clases de matemática",
+    "heroVisualAlt": "Trabajadores locales revisando una solicitud de servicio en una casa",
+    "heroStatCategories": "categorías activas",
+    "heroStatPayment": "pago protegido",
+    "heroStatCoverage": "El Salvador",
+    "heroRequestLabel": "Solicitud destacada",
+    "heroRequestTitle": "Reparación eléctrica en Santa Tecla",
+    "heroRequestMeta": "2 propuestas recibidas",
+    "heroRequestBudget": "Presupuesto",
+    "heroRequestStatus": "Pago listo para retener",
     "searchService": "¿Qué servicio necesitas?",
     "searchLocation": "¿Dónde?",
     "searchButton": "Buscar",
@@ -30,6 +49,12 @@
     "seeAll": "Ver todos",
     "activeJobsTitle": "Trabajos activos en tu área",
     "activeJobsSubtitle": "Aplica directamente a estas solicitudes abiertas.",
+    "activeJobsEyebrow": "Mercado en movimiento",
+    "featuredJob": "Trabajo destacado",
+    "deadlineLabel": "Fecha límite",
+    "clientLabel": "Cliente",
+    "protectedPayment": "Pago protegido",
+    "proposalCount": "{count, plural, =0 {Sin propuestas} one {# propuesta} other {# propuestas}}",
     "sortNewest": "Más recientes",
     "sortBudget": "Mayor presupuesto",
     "viewAllJobs": "Ver todos los trabajos",
@@ -40,6 +65,8 @@
     "trustPayment": "Pagos seguros vía Tkiero",
     "trustLocal": "Solo en El Salvador",
     "howItWorksTitle": "¿Cómo funciona?",
+    "howItWorksEyebrow": "Sin vueltas",
+    "howItWorksIntro": "ServiLocal ordena el proceso para que cliente y trabajador sepan qué esperar en cada paso.",
     "howItWorksStep1Title": "Publica tu trabajo",
     "howItWorksStep1Desc": "Describe lo que necesitas en segundos. Es gratis y sencillo.",
     "howItWorksStep2Title": "Elige tu profesional",
@@ -63,6 +90,15 @@
       "CLEANING": "Limpieza",
       "DESIGN": "Diseñador",
       "DIGITAL": "Digital"
+    },
+    "categoryCount": "{count, plural, =0 {Sin trabajos activos} one {# trabajo activo} other {# trabajos activos}}",
+    "categoryHint": {
+      "PLUMBING": "Fugas, grifos e instalaciones",
+      "TEACHING": "Clases y refuerzo escolar",
+      "DELIVERY": "Mandados y entregas locales",
+      "CLEANING": "Casas, oficinas y limpieza puntual",
+      "DESIGN": "Marca, piezas y contenido visual",
+      "DIGITAL": "Soporte web y tareas digitales"
     },
     "timeAgo": {
       "minutesAgo": "{count} min",
