@@ -1,7 +1,9 @@
 'use client'
 
 import { useActionState, useState } from 'react'
+import { motion } from 'framer-motion'
 import Link from 'next/link'
+import { AlertCircle, Wrench, GraduationCap, Truck, Sparkles, Palette, Monitor, Briefcase, HardHat } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { registerAndLogin } from '@/actions/auth'
 import type { AuthState } from '@/actions/auth'
@@ -9,13 +11,13 @@ import { SubmitButton } from '@/components/ui/submit-button'
 
 type Skill = 'PLUMBING' | 'TEACHING' | 'DELIVERY' | 'CLEANING' | 'DESIGN' | 'DIGITAL'
 
-const SKILLS: { value: Skill; label: string; icon: string }[] = [
-  { value: 'PLUMBING',  label: 'Fontanería',      icon: 'plumbing' },
-  { value: 'TEACHING',  label: 'Enseñanza',        icon: 'school' },
-  { value: 'DELIVERY',  label: 'Delivery',         icon: 'local_shipping' },
-  { value: 'CLEANING',  label: 'Limpieza',         icon: 'cleaning_services' },
-  { value: 'DESIGN',    label: 'Diseño',           icon: 'palette' },
-  { value: 'DIGITAL',   label: 'Digital / Tech',   icon: 'computer' },
+const SKILLS: { value: Skill; label: string; Icon: React.FC<{ className?: string }> }[] = [
+  { value: 'PLUMBING', label: 'Fontanería',    Icon: Wrench },
+  { value: 'TEACHING', label: 'Enseñanza',      Icon: GraduationCap },
+  { value: 'DELIVERY', label: 'Delivery',       Icon: Truck },
+  { value: 'CLEANING', label: 'Limpieza',       Icon: Sparkles },
+  { value: 'DESIGN',   label: 'Diseño',         Icon: Palette },
+  { value: 'DIGITAL',  label: 'Digital / Tech', Icon: Monitor },
 ]
 
 const COUNTRY_CODES = [
@@ -31,14 +33,13 @@ const COUNTRY_CODES = [
 ]
 
 const inputClass =
-  'w-full border border-outline rounded-xl px-4 py-3 text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary bg-surface-container-lowest transition-colors'
+  'w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 transition-colors duration-200 focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/10'
+
+const labelClass = 'text-xs font-semibold uppercase tracking-wider text-gray-400'
 
 export function RegisterForm({ callbackUrl }: { callbackUrl: string }) {
   const t = useTranslations('Auth')
-  const [state, formAction] = useActionState<AuthState | null, FormData>(
-    registerAndLogin,
-    null,
-  )
+  const [state, formAction] = useActionState<AuthState | null, FormData>(registerAndLogin, null)
   const [role, setRole]               = useState<'CLIENT' | 'PROVIDER'>('CLIENT')
   const [skills, setSkills]           = useState<Skill[]>([])
   const [countryCode, setCountryCode] = useState('+503')
@@ -51,105 +52,81 @@ export function RegisterForm({ callbackUrl }: { callbackUrl: string }) {
   }
 
   return (
-    <div className="bg-white sm:rounded-2xl sm:shadow-md p-6 sm:p-10">
-      <div className="flex items-center gap-2 mb-8">
-        <span
-          className="material-symbols-outlined text-primary"
-          style={{ fontVariationSettings: "'FILL' 1" }}
-        >
-          handshake
-        </span>
-        <span className="text-headline-md text-primary">ServiLocal</span>
-      </div>
+    <div>
+      {/* Logo */}
+      <p className="mb-8 text-sm font-bold tracking-tight text-primary">ServiLocal</p>
 
-      <h1 className="text-headline-md text-on-surface mb-2">{t('register.title')}</h1>
-      <p className="text-body-md text-on-surface-variant mb-8">{t('register.subtitle')}</p>
+      <h1 className="text-3xl font-bold text-gray-900">{t('register.title')}</h1>
+      <p className="mt-2 text-sm text-gray-500">{t('register.subtitle')}</p>
 
       {state?.error && (
-        <div className="flex items-center gap-2 bg-primary-container border border-outline text-on-primary-container rounded-xl px-4 py-3 text-label-md mb-4">
-          <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>error</span>
+        <div className="mt-5 flex items-center gap-2 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-600">
+          <AlertCircle className="h-4 w-4 shrink-0" />
           {state.error}
         </div>
       )}
 
-      <form action={formAction} className="flex flex-col gap-5">
+      <form action={formAction} className="mt-7 flex flex-col gap-4">
         <input type="hidden" name="callbackUrl" value={callbackUrl} />
         <input type="hidden" name="role" value={role} />
-
-        {/* Hidden skills inputs — one per selected skill */}
         {skills.map((s) => (
           <input key={s} type="hidden" name="skills" value={s} />
         ))}
 
         {/* Role toggle */}
-        <div>
-          <label className="text-label-md text-on-surface-variant block mb-2">
-            {t('register.roleLabel')}
-          </label>
-          <div className="flex bg-surface-container rounded-full p-1 gap-1">
-            <button
-              type="button"
-              onClick={() => setRole('CLIENT')}
-              className={`flex-1 py-2 rounded-full text-label-md transition-colors duration-200 ${
-                role === 'CLIENT'
-                  ? 'bg-primary text-on-primary'
-                  : 'text-on-surface-variant hover:bg-surface-variant'
-              }`}
-            >
-              {t('register.roleClient')}
-            </button>
-            <button
-              type="button"
-              onClick={() => setRole('PROVIDER')}
-              className={`flex-1 py-2 rounded-full text-label-md transition-colors duration-200 ${
-                role === 'PROVIDER'
-                  ? 'bg-primary text-on-primary'
-                  : 'text-on-surface-variant hover:bg-surface-variant'
-              }`}
-            >
-              {t('register.roleProvider')}
-            </button>
+        <div className="flex flex-col gap-2">
+          <span className={labelClass}>{t('register.roleLabel')}</span>
+          <div className="relative flex border-b border-gray-100">
+            {([
+              { value: 'CLIENT',   Icon: Briefcase, label: t('register.roleClient') },
+              { value: 'PROVIDER', Icon: HardHat,   label: t('register.roleProvider') },
+            ] as const).map(({ value: r, Icon, label }) => (
+              <button
+                key={r}
+                type="button"
+                onClick={() => setRole(r)}
+                className={`inline-flex flex-1 items-center justify-center gap-2 pb-3 text-sm font-semibold transition-colors duration-200 ${
+                  role === r ? 'text-gray-900' : 'text-gray-400 hover:text-gray-600'
+                }`}
+              >
+                <Icon className="h-4 w-4 shrink-0" />
+                {label}
+              </button>
+            ))}
+            <motion.div
+              className="absolute bottom-0 h-0.5 w-1/2 bg-primary"
+              animate={{ x: role === 'CLIENT' ? '0%' : '100%' }}
+              transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
+            />
           </div>
         </div>
 
         {/* Full name */}
-        <div>
-          <label htmlFor="name" className="text-label-md text-on-surface-variant block mb-1">
-            {t('fields.fullName')}
-          </label>
-          <input id="name" name="name" type="text" autoComplete="name" required className={inputClass} />
-          {state?.fieldErrors?.name && (
-            <p className="text-red-600 text-label-sm mt-1">{state.fieldErrors.name}</p>
-          )}
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="name" className={labelClass}>{t('fields.fullName')}</label>
+          <input id="name" name="name" type="text" autoComplete="name" required placeholder="Juan Pérez" className={inputClass} />
+          {state?.fieldErrors?.name && <p className="text-xs text-red-500">{state.fieldErrors.name}</p>}
         </div>
 
         {/* Email */}
-        <div>
-          <label htmlFor="email" className="text-label-md text-on-surface-variant block mb-1">
-            {t('fields.email')}
-          </label>
-          <input id="email" name="email" type="email" autoComplete="email" required className={inputClass} />
-          {state?.fieldErrors?.email && (
-            <p className="text-red-600 text-label-sm mt-1">{state.fieldErrors.email}</p>
-          )}
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="email" className={labelClass}>{t('fields.email')}</label>
+          <input id="email" name="email" type="email" autoComplete="email" required placeholder="tu@correo.com" className={inputClass} />
+          {state?.fieldErrors?.email && <p className="text-xs text-red-500">{state.fieldErrors.email}</p>}
         </div>
 
         {/* Phone */}
-        <div>
-          <label htmlFor="phoneNumber" className="text-label-md text-on-surface-variant block mb-1">
-            Teléfono
-          </label>
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="phoneNumber" className={labelClass}>Teléfono</label>
           <input type="hidden" name="phone" value={`${countryCode}${phoneNumber}`} />
           <div className="flex gap-2">
             <select
               value={countryCode}
               onChange={(e) => setCountryCode(e.target.value)}
-              className="border border-outline rounded-xl px-3 py-3 text-body-md text-on-surface focus:outline-none focus:border-primary bg-surface-container-lowest transition-colors shrink-0"
+              className="shrink-0 rounded-xl border border-gray-200 bg-gray-50 px-3 py-3 text-sm text-gray-900 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10"
             >
               {COUNTRY_CODES.map(({ code, flag, name }) => (
-                <option key={code} value={code}>
-                  {flag} {code} {name}
-                </option>
+                <option key={code} value={code}>{flag} {code} {name}</option>
               ))}
             </select>
             <input
@@ -163,71 +140,63 @@ export function RegisterForm({ callbackUrl }: { callbackUrl: string }) {
               className={`${inputClass} flex-1`}
             />
           </div>
-          {state?.fieldErrors?.phone && (
-            <p className="text-red-600 text-label-sm mt-1">{state.fieldErrors.phone}</p>
-          )}
+          {state?.fieldErrors?.phone && <p className="text-xs text-red-500">{state.fieldErrors.phone}</p>}
         </div>
 
         {/* Password */}
-        <div>
-          <label htmlFor="password" className="text-label-md text-on-surface-variant block mb-1">
-            {t('fields.password')}
-          </label>
-          <input id="password" name="password" type="password" autoComplete="new-password" required className={inputClass} />
-          {state?.fieldErrors?.password && (
-            <p className="text-red-600 text-label-sm mt-1">{state.fieldErrors.password}</p>
-          )}
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="password" className={labelClass}>{t('fields.password')}</label>
+          <input id="password" name="password" type="password" autoComplete="new-password" required placeholder="••••••••" className={inputClass} />
+          {state?.fieldErrors?.password && <p className="text-xs text-red-500">{state.fieldErrors.password}</p>}
         </div>
 
-        {/* Skills — only for PROVIDER */}
+        {/* Skills — PROVIDER only */}
         {role === 'PROVIDER' && (
-          <div>
-            <label className="text-label-md text-on-surface-variant block mb-1">
+          <motion.div
+            className="flex flex-col gap-2"
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+          >
+            <span className={labelClass}>
               Mis habilidades
-              <span className="text-label-sm text-on-surface-variant/60 ml-1">(selecciona todas las que apliquen)</span>
-            </label>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-2">
-              {SKILLS.map(({ value, label, icon }) => {
+              <span className="ml-1 normal-case tracking-normal text-gray-300">(elige las que apliquen)</span>
+            </span>
+            <div className="grid grid-cols-2 gap-2">
+              {SKILLS.map(({ value, label, Icon }) => {
                 const active = skills.includes(value)
                 return (
                   <button
                     key={value}
                     type="button"
                     onClick={() => toggleSkill(value)}
-                    className={`btn-press flex items-center gap-2 px-3 py-2.5 rounded-xl border text-left transition-colors ${
+                    className={`flex items-center gap-2 rounded-xl border px-3 py-2.5 text-left text-sm transition-all duration-200 ${
                       active
-                        ? 'bg-primary border-primary text-on-primary'
-                        : 'bg-surface-container-lowest border-outline-variant text-on-surface hover:border-primary/60 hover:bg-surface-container'
+                        ? 'border-primary bg-primary text-white'
+                        : 'border-gray-200 bg-gray-50 text-gray-600 hover:border-primary/40 hover:text-primary'
                     }`}
                   >
-                    <span
-                      className="material-symbols-outlined text-[20px] shrink-0"
-                      style={{ fontVariationSettings: `'FILL' ${active ? 1 : 0}` }}
-                    >
-                      {icon}
-                    </span>
-                    <span className="text-label-sm">{label}</span>
+                    <Icon className="h-4 w-4 shrink-0" />
+                    <span className="font-medium">{label}</span>
                   </button>
                 )
               })}
             </div>
-            {state?.fieldErrors?.skills && (
-              <p className="text-red-600 text-label-sm mt-1">{state.fieldErrors.skills}</p>
-            )}
             {skills.length === 0 && (
-              <p className="text-on-surface-variant/60 text-label-sm mt-1">
-                Selecciona al menos una habilidad para continuar.
-              </p>
+              <p className="text-xs text-gray-400">Selecciona al menos una habilidad.</p>
             )}
-          </div>
+            {state?.fieldErrors?.skills && <p className="text-xs text-red-500">{state.fieldErrors.skills}</p>}
+          </motion.div>
         )}
 
-        <SubmitButton label={t('register.button')} />
+        <div className="mt-2">
+          <SubmitButton label={t('register.button')} />
+        </div>
       </form>
 
-      <p className="text-center text-body-md text-on-surface-variant mt-8">
+      <p className="mt-6 text-center text-sm text-gray-500">
         {t('register.haveAccount')}{' '}
-        <Link href="/login" className="text-primary font-semibold hover:underline">
+        <Link href="/login" className="font-semibold text-primary hover:underline">
           {t('register.loginLink')}
         </Link>
       </p>

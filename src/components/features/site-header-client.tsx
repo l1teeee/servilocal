@@ -30,18 +30,28 @@ function LocaleToggle({ locale }: { locale: Locale }) {
   const next: Locale = locale === 'es' ? 'en' : 'es'
 
   function handle() {
+    document.documentElement.style.transition = 'opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+    document.documentElement.style.opacity = '0'
+
     startTransition(async () => {
       await setLocale(next)
       router.refresh()
     })
   }
 
+  useEffect(() => {
+    if (!isPending) {
+      document.documentElement.style.transition = 'opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
+      document.documentElement.style.opacity = '1'
+    }
+  }, [isPending])
+
   return (
     <button
       onClick={handle}
       disabled={isPending}
       aria-label="Switch language"
-      className="btn-press rounded-full px-3 py-1.5 text-label-sm text-on-surface-variant transition-colors duration-200 hover:bg-white hover:text-primary disabled:opacity-40"
+      className="text-xs font-medium text-gray-400 transition-colors duration-200 hover:text-gray-900 disabled:opacity-40"
     >
       {locale === 'es' ? 'EN' : 'ES'}
     </button>
@@ -50,8 +60,7 @@ function LocaleToggle({ locale }: { locale: Locale }) {
 
 export function SiteHeaderClient({ labels, user, locale }: Props) {
   const pathname = usePathname()
-  const [visible, setVisible]           = useState(false)
-  const [inHowItWorks, setInHowItWorks] = useState(false)
+  const [visible, setVisible] = useState(false)
 
   const navItems = [
     { href: '/jobs',               label: labels.findWork },
@@ -60,58 +69,53 @@ export function SiteHeaderClient({ labels, user, locale }: Props) {
   ]
 
   useEffect(() => {
+    let lastY = window.scrollY
+
     function onScroll() {
-      setVisible(window.scrollY > window.innerHeight * 0.85)
+      const currentY = window.scrollY
+      const pastHero = currentY > window.innerHeight * 0.5
+
+      if (!pastHero) {
+        setVisible(false)
+      } else if (currentY < lastY) {
+        setVisible(true)
+      } else if (currentY > lastY + 4) {
+        setVisible(false)
+      }
+
+      lastY = currentY
     }
-    onScroll()
+
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  useEffect(() => {
-    function onEnter() { setInHowItWorks(true) }
-    function onLeave() { setInHowItWorks(false) }
-    window.addEventListener('hiw:enter', onEnter)
-    window.addEventListener('hiw:leave', onLeave)
-    return () => {
-      window.removeEventListener('hiw:enter', onEnter)
-      window.removeEventListener('hiw:leave', onLeave)
-    }
-  }, [])
-
-  const shown = visible && !inHowItWorks
-
   return (
     <header
       className={[
-        'fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-4 sm:pt-4',
+        'fixed inset-x-0 top-0 z-50 px-4 pt-4',
         'transition-[opacity,transform] duration-500 ease-out',
-        shown
+        visible
           ? 'translate-y-0 opacity-100'
-          : '-translate-y-2 pointer-events-none opacity-0',
+          : '-translate-y-3 pointer-events-none opacity-0',
       ].join(' ')}
     >
-      {/* Island */}
-      <div className="mx-auto max-w-7xl rounded-2xl border border-black/10 bg-white/80 shadow-sm backdrop-blur-xl">
-        <div className="flex h-14 items-center justify-between gap-4 px-4 md:px-5">
+      <div className="mx-auto max-w-6xl rounded-2xl border border-gray-200/60 bg-white/90 shadow-sm shadow-black/4 backdrop-blur-xl">
+        <div className="flex h-14 items-center justify-between gap-6 px-5">
 
-          {/* Logo — icon gray, no colored box */}
-          <Link
-            href="/"
-            className="flex shrink-0 items-center gap-2"
-            aria-label="ServiLocal"
-          >
+          {/* Logo */}
+          <Link href="/" className="flex shrink-0 items-center gap-2" aria-label="ServiLocal">
             <span
-              className="material-symbols-outlined text-[22px] text-on-surface-variant"
+              className="material-symbols-outlined text-[20px] text-primary"
               style={{ fontVariationSettings: "'FILL' 1" }}
             >
               handshake
             </span>
-            <span className="text-sm font-semibold text-on-surface">ServiLocal</span>
+            <span className="text-sm font-bold tracking-tight text-primary">ServiLocal</span>
           </Link>
 
-          {/* Nav — no inner pill, plain links */}
-          <nav className="hidden items-center gap-0.5 md:flex">
+          {/* Nav — centered */}
+          <nav className="hidden flex-1 items-center justify-center gap-1 md:flex">
             {navItems.map(({ href, label }) => {
               const active = pathname === href || pathname.startsWith(`${href}/`)
               return (
@@ -119,10 +123,10 @@ export function SiteHeaderClient({ labels, user, locale }: Props) {
                   key={href}
                   href={href}
                   className={[
-                    'rounded-full px-4 py-2 text-label-md transition-colors duration-200',
+                    'rounded-lg px-4 py-2 text-sm transition-colors duration-200',
                     active
-                      ? 'bg-white text-primary'
-                      : 'text-on-surface-variant hover:bg-white hover:text-primary',
+                      ? 'font-semibold text-primary'
+                      : 'font-medium text-gray-500 hover:text-primary',
                   ].join(' ')}
                 >
                   {label}
@@ -132,16 +136,16 @@ export function SiteHeaderClient({ labels, user, locale }: Props) {
           </nav>
 
           {/* Actions */}
-          <div className="flex shrink-0 items-center gap-1.5">
+          <div className="flex shrink-0 items-center gap-4">
             <LocaleToggle locale={locale} />
 
             {user ? (
               <Link
                 href={user.dashboardHref}
-                className="btn-press flex items-center gap-1.5 rounded-full px-4 py-2 text-label-md text-on-surface-variant transition-colors duration-200 hover:bg-white hover:text-primary"
+                className="flex items-center gap-2 text-sm font-medium text-gray-600 transition-colors duration-200 hover:text-gray-900"
               >
                 <span
-                  className="material-symbols-outlined text-[17px]"
+                  className="material-symbols-outlined text-[18px]"
                   style={{ fontVariationSettings: "'FILL' 1" }}
                 >
                   account_circle
@@ -151,7 +155,7 @@ export function SiteHeaderClient({ labels, user, locale }: Props) {
             ) : (
               <Link
                 href="/login"
-                className="btn-press rounded-full px-5 py-2 text-label-md text-on-surface-variant transition-colors duration-200 hover:bg-white hover:text-primary"
+                className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-white transition-colors duration-200 hover:bg-primary/85"
               >
                 {labels.login}
               </Link>

@@ -47,12 +47,11 @@ async function getCategories() {
     }
 
     const active = CATEGORY_ORDER.filter((c) => counts.has(c))
-    const toRender = active.length > 0 ? active : CATEGORY_ORDER
+    const toRender = CATEGORY_ORDER
 
-    const configs =
-      active.length > 0
-        ? await db.categoryConfig.findMany({ where: { category: { in: active } } })
-        : []
+    const configs = await db.categoryConfig.findMany({
+      where: { category: { in: CATEGORY_ORDER } },
+    })
 
     const iconMap = new Map(configs.map((c) => [c.category as ServiceCategory, c.icon]))
 

@@ -6,7 +6,11 @@
     "login": "Entrar"
   },
   "Footer": {
-    "tagline": "© 2026 ServiLocal. Hecho para la comunidad.",
+    "tagline": "El mercado de servicios locales de El Salvador. Conecta con profesionales verificados y paga de forma segura.",
+    "copyright": "© 2026 ServiLocal. Todos los derechos reservados.",
+    "colPlatform": "Plataforma",
+    "colCompany": "Empresa",
+    "colSupport": "Soporte",
     "terms": "Términos de servicio",
     "privacy": "Política de privacidad",
     "help": "Centro de ayuda",
@@ -14,6 +18,10 @@
     "about": "Acerca de",
     "jobs": "Trabajos abiertos",
     "postJob": "Publicar trabajo",
+    "howItWorks": "Cómo funciona",
+    "categories": "Categorías",
+    "contact": "Contáctanos",
+    "blog": "Blog",
     "login": "Entrar"
   },
   "BottomNav": {

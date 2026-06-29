@@ -1,9 +1,10 @@
 import { Suspense } from 'react'
 import Link from 'next/link'
-import { ArrowUpRight } from 'lucide-react'
+import { ArrowUpRight, ArrowRight } from 'lucide-react'
 import { getLocale, getTranslations } from 'next-intl/server'
 import { db } from '@/lib/db'
 import { SiteHeader } from '@/components/features/site-header'
+import { JobCard } from '@/components/ui/job-card'
 import { SiteFooter } from '@/components/features/site-footer'
 import { BottomNav } from '@/components/features/bottom-nav'
 import { HeroVideoBackground } from '@/components/features/hero-video-background'
@@ -155,7 +156,7 @@ export default async function HomePage() {
           {/* Kicker badge */}
           <p className="hero-item hero-item-1 mb-6 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-medium text-white/90 backdrop-blur-sm">
             <span
-              className="material-symbols-outlined text-[16px] text-blue-300"
+              className="material-symbols-outlined text-[16px] text-primary"
               style={{ fontVariationSettings: "'FILL' 1" }}
             >
               verified
@@ -201,10 +202,13 @@ export default async function HomePage() {
             {/* Ghost CTA — "Find Work" */}
             <Link
               href="/jobs"
-              className="hero-cta-ghost inline-flex items-center gap-2 rounded-full border border-white/40 px-7 py-3 text-sm font-medium text-white/80 transition-colors duration-300 ease-out active:scale-[0.97] hover:border-white hover:bg-white hover:text-primary"
+              className="hero-cta-ghost group inline-flex items-center gap-2 rounded-full border border-white/40 px-7 py-3 text-sm font-medium text-white/80 transition-colors duration-300 ease-out active:scale-[0.97] hover:border-white hover:bg-white hover:text-primary"
             >
               {t('findWork')}
-              <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+              <span className="relative inline-flex h-4 w-4 overflow-hidden">
+                <ArrowRight className="absolute h-4 w-4 transition-transform duration-300 ease-out group-hover:translate-x-[200%]" />
+                <ArrowRight className="absolute h-4 w-4 translate-x-[-200%] transition-transform duration-300 ease-out group-hover:translate-x-0" />
+              </span>
             </Link>
           </div>
 
@@ -249,24 +253,25 @@ export default async function HomePage() {
         eyebrow={t('howItWorksEyebrow')}
       />
 
-      <main className="mx-auto max-w-7xl">
-        {/* ── Active jobs ── */}
-        <section className="px-margin-mobile py-14 md:px-margin-desktop md:py-16">
-          <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+      {/* ── Active jobs ── */}
+      <section className="bg-white py-20 md:py-28">
+        <div className="mx-auto max-w-7xl px-5 md:px-14">
+          {/* Section header */}
+          <div className="mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
             <div>
-              <p className="mb-3 text-label-md uppercase text-on-surface-variant">
+              <p className="mb-2 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-primary">
                 {t('activeJobsEyebrow')}
               </p>
-              <h2 className="text-headline-lg-mobile text-primary md:text-headline-lg">
+              <h2 className="text-3xl font-bold leading-tight text-gray-900 md:text-4xl">
                 {t('activeJobsTitle')}
               </h2>
-              <p className="mt-2 max-w-xl text-body-md text-on-surface-variant">
+              <p className="mt-3 max-w-xl text-base text-on-surface-variant">
                 {t('activeJobsSubtitle')}
               </p>
             </div>
             <Link
               href="/jobs"
-              className="btn-press inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-label-md text-on-primary transition-opacity hover:opacity-90"
+              className="group inline-flex shrink-0 items-center gap-2 rounded-full border border-primary bg-primary px-6 py-3 text-label-md text-white transition-colors duration-300 ease-out hover:bg-white hover:text-primary"
             >
               {t('viewAllJobs')}
               <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
@@ -274,125 +279,29 @@ export default async function HomePage() {
           </div>
 
           {featuredJob ? (
-            <div
-              className={
-                secondaryJobs.length > 0
-                  ? 'grid gap-5 lg:grid-cols-[1.06fr_0.94fr]'
-                  : 'max-w-3xl'
-              }
-            >
-              <article className="card-enter card-enter-1 card-hover flex min-h-[25rem] flex-col rounded-2xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm md:p-7">
-                <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-                  <span className="inline-flex items-center gap-2 rounded-full bg-primary-container px-3 py-1.5 text-label-sm text-on-primary-container">
-                    <span className="material-symbols-outlined text-[16px]">
-                      {DEFAULT_CATEGORY_ICONS[featuredJob.category] ?? 'work'}
-                    </span>
-                    {t(`serviceCategory.${featuredJob.category}`)}
-                  </span>
-                  <span className="rounded-full border border-outline-variant px-3 py-1.5 text-label-sm text-on-surface-variant">
-                    {t('featuredJob')}
-                  </span>
-                </div>
-
-                <h3 className="max-w-xl text-headline-lg-mobile text-on-surface md:text-headline-lg">
-                  {featuredJob.title}
-                </h3>
-                <p className="mt-4 max-w-2xl flex-grow text-body-lg text-on-surface-variant">
-                  {featuredJob.description}
-                </p>
-
-                <dl className="mt-8 grid gap-3 sm:grid-cols-3">
-                  <div className="rounded-2xl bg-surface-container p-4">
-                    <dt className="text-label-sm text-on-surface-variant">
-                      {t('clientLabel')}
-                    </dt>
-                    <dd className="mt-1 text-label-md text-on-surface">
-                      {featuredJob.client.name}
-                    </dd>
-                  </div>
-                  <div className="rounded-2xl bg-surface-container p-4">
-                    <dt className="text-label-sm text-on-surface-variant">
-                      {t('deadlineLabel')}
-                    </dt>
-                    <dd className="mt-1 text-label-md text-on-surface">
-                      {dateFormatter.format(featuredJob.deadline)}
-                    </dd>
-                  </div>
-                  <div className="rounded-2xl bg-surface-container p-4">
-                    <dt className="text-label-sm text-on-surface-variant">
-                      {t('proposalCount', { count: featuredJob.applicationsCount })}
-                    </dt>
-                    <dd className="mt-1 text-label-md text-on-surface">
-                      {t('protectedPayment')}
-                    </dd>
-                  </div>
-                </dl>
-
-                <div className="mt-6 flex flex-col gap-4 border-t border-outline-variant pt-5 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <p className="text-label-sm text-on-surface-variant">
-                      {t('heroRequestBudget')}
-                    </p>
-                    <p className="text-[2rem] font-bold leading-10 text-primary">
-                      ${featuredJob.budget.toFixed(2)}
-                    </p>
-                  </div>
-                  <Link
-                    href={`/jobs/${featuredJob.id}`}
-                    className="btn-press inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 text-label-md text-on-primary transition-opacity hover:opacity-90"
-                  >
-                    {t('viewJob')}
-                  </Link>
-                </div>
-              </article>
-
-              {secondaryJobs.length > 0 && (
-                <div className="grid gap-4">
-                  {secondaryJobs.map((job, index) => {
-                    const delayIndex = Math.min(index + 2, 6)
-                    return (
-                      <article
-                        key={job.id}
-                        className={`card-enter card-enter-${delayIndex} card-hover rounded-2xl border border-outline-variant bg-surface-container-lowest p-5 shadow-sm`}
-                      >
-                        <div className="mb-3 flex items-start justify-between gap-4">
-                          <span className="inline-flex items-center gap-1.5 rounded-full bg-surface-container px-3 py-1 text-label-sm text-on-surface-variant">
-                            <span className="material-symbols-outlined text-[15px]">
-                              {DEFAULT_CATEGORY_ICONS[job.category] ?? 'work'}
-                            </span>
-                            {t(`serviceCategory.${job.category}`)}
-                          </span>
-                          <span className="shrink-0 text-label-sm text-on-surface-variant">
-                            {timeAgo(job.createdAt)}
-                          </span>
-                        </div>
-
-                        <h3 className="text-headline-md text-on-surface">{job.title}</h3>
-                        <p className="mt-2 line-clamp-2 text-body-md text-on-surface-variant">
-                          {job.description}
-                        </p>
-
-                        <div className="mt-5 flex items-end justify-between gap-4 border-t border-outline-variant pt-4">
-                          <div>
-                            <p className="text-label-sm text-on-surface-variant">
-                              {job.client.name}
-                            </p>
-                            <p className="mt-1 text-headline-md text-primary">
-                              ${job.budget.toFixed(2)}
-                            </p>
-                          </div>
-                          <Link
-                            href={`/jobs/${job.id}`}
-                            className="btn-press rounded-full border border-primary px-4 py-2 text-label-sm text-primary transition-colors hover:bg-primary-container"
-                          >
-                            {t('viewJob')}
-                          </Link>
-                        </div>
-                      </article>
-                    )
-                  })}
-                </div>
-              )}
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+              {jobs.slice(0, 4).map((job, index) => (
+                <JobCard
+                  key={job.id}
+                  id={job.id}
+                  title={job.title}
+                  description={job.description}
+                  category={t(`serviceCategory.${job.category}`)}
+                  categoryKey={job.category}
+                  categoryIcon={DEFAULT_CATEGORY_ICONS[job.category] ?? 'work'}
+                  client={job.client.name}
+                  budget={`$${job.budget.toFixed(2)}`}
+                  stats={[
+                    { label: t('clientLabel'),   value: job.client.name },
+                    { label: t('deadlineLabel'), value: dateFormatter.format(job.deadline) },
+                    { label: t('proposalCount', { count: job.applicationsCount }), value: t('protectedPayment') },
+                  ]}
+                  viewLabel={t('viewJob')}
+                  featured={index === 0}
+                  featuredLabel={index === 0 ? t('featuredJob') : undefined}
+                  delayIndex={index}
+                />
+              ))}
             </div>
           ) : (
             <EmptyState
@@ -401,8 +310,8 @@ export default async function HomePage() {
               cta={t('postJob')}
             />
           )}
-        </section>
-      </main>
+        </div>
+      </section>
 
       <SiteFooter />
       <BottomNav />
@@ -420,15 +329,15 @@ function EmptyState({
   cta: string
 }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-outline-variant bg-surface-container-lowest px-6 py-16 text-center">
-      <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-container text-primary">
+    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-outline-variant bg-surface-container-low px-6 py-16 text-center">
+      <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-container text-on-primary-container">
         <span className="material-symbols-outlined text-[30px]">work</span>
       </span>
-      <p className="mt-5 text-headline-md text-on-surface">{title}</p>
-      <p className="mt-2 max-w-md text-body-md text-on-surface-variant">{subtitle}</p>
+      <p className="mt-5 text-xl font-semibold text-white">{title}</p>
+      <p className="mt-2 max-w-md text-sm leading-relaxed text-white/50">{subtitle}</p>
       <Link
         href="/dashboard/jobs/new"
-        className="btn-press mt-6 rounded-full bg-primary px-8 py-3 text-label-md text-on-primary hover:opacity-90"
+        className="btn-press mt-6 rounded-full bg-primary px-8 py-3 text-label-md text-white transition-opacity hover:opacity-90"
       >
         {cta}
       </Link>

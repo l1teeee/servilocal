@@ -1,22 +1,18 @@
 import type { Metadata } from 'next'
-import { Montserrat, Plus_Jakarta_Sans } from 'next/font/google'
+import { DM_Sans } from 'next/font/google'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages } from 'next-intl/server'
 import { JsonLd } from '@/components/features/json-ld'
+import { PageTransition } from '@/components/features/page-transition'
 import './globals.css'
 
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://servilocal.vercel.app'
 
-const montserrat = Montserrat({
+const dmSans = DM_Sans({
   subsets: ['latin'],
-  variable: '--font-montserrat',
+  variable: '--font-dm-sans',
   display: 'swap',
-})
-
-const jakarta = Plus_Jakarta_Sans({
-  subsets: ['latin'],
-  variable: '--font-jakarta',
-  display: 'swap',
+  weight: ['300', '400', '500', '600', '700', '800'],
 })
 
 export const metadata: Metadata = {
@@ -90,7 +86,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const messages = await getMessages()
 
   return (
-    <html lang={locale} className={`${montserrat.variable} ${jakarta.variable}`}>
+    <html lang={locale} className={dmSans.variable}>
       <head>
         <link
           rel="stylesheet"
@@ -100,6 +96,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className="bg-background text-on-background font-sans antialiased">
         <JsonLd />
         <NextIntlClientProvider locale={locale} messages={messages}>
+          <PageTransition />
           {children}
         </NextIntlClientProvider>
       </body>

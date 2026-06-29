@@ -6,7 +6,11 @@
     "login": "Login"
   },
   "Footer": {
-    "tagline": "© 2026 ServiLocal. Built for the community.",
+    "tagline": "El Salvador's local services marketplace. Connect with verified professionals and pay securely.",
+    "copyright": "© 2026 ServiLocal. All rights reserved.",
+    "colPlatform": "Platform",
+    "colCompany": "Company",
+    "colSupport": "Support",
     "terms": "Terms of Service",
     "privacy": "Privacy Policy",
     "help": "Help Center",
@@ -14,6 +18,10 @@
     "about": "About",
     "jobs": "Open jobs",
     "postJob": "Post a job",
+    "howItWorks": "How it works",
+    "categories": "Categories",
+    "contact": "Contact us",
+    "blog": "Blog",
     "login": "Login"
   },
   "BottomNav": {
@@ -119,8 +127,8 @@
       "subtitle": "Join ServiLocal — hire or offer services.",
       "button": "Create account",
       "roleLabel": "I want to…",
-      "roleClient": "🔍 Hire (Client)",
-      "roleProvider": "🔧 Work (Provider)",
+      "roleClient": "Hire (Client)",
+      "roleProvider": "Work (Provider)",
       "haveAccount": "Already have an account?",
       "loginLink": "Sign in"
     },

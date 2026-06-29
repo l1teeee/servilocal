@@ -43,8 +43,8 @@
   --color-popover-foreground: var(--color-on-surface);
 
   /* Fonts */
-  --font-sans: var(--font-jakarta), "Plus Jakarta Sans", sans-serif;
-  --font-display: var(--font-montserrat), "Montserrat", sans-serif;
+  --font-sans: var(--font-dm-sans), "DM Sans", sans-serif;
+  --font-display: var(--font-dm-sans), "DM Sans", sans-serif;
 
   /* Spacing */
   --spacing-gutter: 1rem;
