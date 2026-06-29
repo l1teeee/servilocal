@@ -23,14 +23,14 @@ const CATEGORY_ICONS_MAT: Record<ServiceCategory, string> = {
   DIGITAL:  'computer',
 }
 
-const CATEGORY_ICONS_LUCIDE = {
+const CATEGORY_ICONS_LUCIDE: Record<ServiceCategory, React.ComponentType<{ className?: string }>> = {
   PLUMBING: Wrench,
   TEACHING: GraduationCap,
   DELIVERY: Truck,
   CLEANING: Sparkles,
   DESIGN:   Palette,
   DIGITAL:  Monitor,
-} satisfies Record<ServiceCategory, (props: { className?: string }) => React.JSX.Element>
+}
 
 const CATEGORIES = Object.keys(CATEGORY_LABELS) as ServiceCategory[]
 
